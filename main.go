@@ -13,12 +13,12 @@ import (
 )
 
 func main() {
-	diplomaChaincode, err := contractapi.NewChaincode(&chaincode.SmartContract{})
+	chaincode, err := contractapi.NewChaincode(&chaincode.SmartContract{})
 	if err != nil {
-		log.Panicf("Error creating diploma chaincode: %v", err)
+		log.Panicf("Error creating chaincode: %v", err)
 	}
 
-	if err := diplomaChaincode.Start(); err != nil {
-		log.Panicf("Error starting diploma chaincode: %v", err)
+	if err := chaincode.Start(); err != nil {
+		log.Panicf("Error starting chaincode: %v", err)
 	}
 }
