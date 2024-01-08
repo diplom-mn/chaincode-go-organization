@@ -1,4 +1,4 @@
-module github.com/diplom-mn/chaincode-org-go
+module github.com/diplom-mn/chaincode-go-organization
 
 go 1.21
 

@@ -3,8 +3,8 @@ package chaincode_test
 import (
 	"testing"
 
-	"github.com/diplom-mn/chaincode-org-go/chaincode"
-	"github.com/diplom-mn/chaincode-org-go/chaincode/mocks"
+	"github.com/diplom-mn/chaincode-go-organization/chaincode"
+	"github.com/diplom-mn/chaincode-go-organization/chaincode/mocks"
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 	"github.com/stretchr/testify/require"
