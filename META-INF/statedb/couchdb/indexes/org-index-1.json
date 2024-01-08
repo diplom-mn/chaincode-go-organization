@@ -1,0 +1,12 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "createTxTimestamp",
+            "pubKeyPem"
+        ]
+    },
+    "ddoc": "org-index-1",
+    "name": "org-index-1",
+    "type": "json"
+}

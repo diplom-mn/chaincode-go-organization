@@ -1,0 +1,13 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "creditId",
+            "orgId",
+            "txTimestamp"
+        ]
+    },
+    "ddoc": "org-credit-index-1",
+    "name": "org-credit-index-1",
+    "type": "json"
+}

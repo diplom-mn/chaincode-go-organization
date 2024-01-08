@@ -1,0 +1,11 @@
+{
+    "index": {
+        "fields": [
+            "docType",
+            "createTxTimestamp"
+        ]
+    },
+    "ddoc": "org-index-2",
+    "name": "org-index-2",
+    "type": "json"
+}

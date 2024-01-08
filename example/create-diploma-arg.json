@@ -1,0 +1,65 @@
+{
+    "id": "892e24e6-319a-4b76-be40-e86dd57799e8",
+    "claims": {
+        "diplomaNumber": "D202316470",
+        "language": "MN",
+        "firstName": "Баттулга",
+        "lastName": "Бадрах",
+        "email": "battulga.dev@gmail.com",
+        "institutionName": "ШУТИС /Шинжлэх ухаан технологийн их сургууль/",
+        "educationLevelName": "Бакалаврын боловсрол",
+        "educationFieldName": "Комьютерийн ухаан",
+        "issuedOn": "2023-06-12T16:00:00.000Z",
+        "extras": {
+            "hemisDiplomaHash": "03e5b4c06b9742cb6544f9e24986ef0ac42aac874fbf1d85f3285f8436355432",
+            "hemisDiploma": {
+                "DEGREE_NUMBER": "D202316470",
+                "PRIMARY_IDENTIFIER_NUMBER": "йр00291810",
+                "INSTITUTION_ID": 35623,
+                "INSTITUTION_NAME": "ШУТИС /Шинжлэх ухаан технологийн их сургууль/",
+                "EDUCATION_LEVEL_NAME": "Бакалаврын боловсрол",
+                "EDUCATION_FIELD_CODE": "061301",
+                "EDUCATION_FIELD_NAME": "Комьютерийн ухаан",
+                "TOTAL_GPA": 2.6,
+                "LAST_NAME": "Бадрах",
+                "FIRST_NAME": "Баттулга",
+                "CONFER_YEAR_NAME": "2022-2023 хичээлийн жил"
+            },
+            "additionalText": ["Монгол Улсын иргэн Бадрахын Баттулга нь 2023 онд МЭДЭЭЛЭЛ, ХОЛБООНЫ ТЕХНОЛОГИЙН сургуульд Компьютерийн ухаан хөтөлбөр/061301/ -өөр суралцан төгссөн тул төгсөлтийн комиссын 2023 оны 06 сарын 12 өдрийн шийдвэрийг үндэслэн Шинжлэх ухаан, технологийн их сургуулийн захирлын 2023 оны 06 сарын 15-ны өдрийн тушаалаар КОМПЬЮТЕРИЙН УХААНЫ Бакалаврын зэрэг олгов."],
+            "signer": [
+                {
+                    "title": "Удирдах зөвлөлийн дарга, Дэд Профессор, Доктор",
+                    "name": "Д.Баттогтох"
+                },
+                {
+                    "title": "Шинжлэх ухаан, технологийн их сургуулийн захирал, Профессор, Доктор",
+                    "name": "Т.Намнан"
+                },
+                {
+                    "title": "Төгсөлтийн комиссын дарга, Профессор, Доктор",
+                    "name": "Н.Эрдэнэхүү"
+                },
+                {
+                    "title": "Мэдээлэл, холбооны технологийн сургуулийн захирал, Дэд профессор, Доктор",
+                    "name": "Н.Чулуунбанди"
+                }
+            ]
+        }
+    },
+    "orgSignProps": {
+        "ORG-MUST": [
+            {
+                "key": "claims"
+            }
+        ],
+        "ORG-HEMIS": [
+            {
+                "key": "claims.extras.hemisDiploma"
+            }
+        ]
+    },
+    "pubKeyType": "ecdsa:P-384",
+    "pubKeyPem": "-----BEGIN PUBLIC KEY-----\nMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAELz51ZxT48fZzaVxLNmNjbShqBXSc/qZu\nuiDDk/PCxRHhhtsZG0FPCahri/KMSJCi3bKs0amV31lwx6yvwyVaq3e7QZV1Jhtt\nRqdZT5qFMA4VkAqDWXJCWAyfZ0TOgN4c\n-----END PUBLIC KEY-----",
+    "signature": "MGYCMQCeqBu5h/kxerSDpQJjwpdlpZskq0H8mLzQKZFF147HlgyRZ9is9C2zl3lOrThXbNcCMQDOJdVkGGgUQnIGSHcl9nGoTJ4qU1rOGfrrug3PjQx57d250/vhJcQtDoIX23x0krU=",
+    "signOrgID": ["ORG-MUST", "ORG-HEMIS"]
+}
