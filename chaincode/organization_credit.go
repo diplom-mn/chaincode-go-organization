@@ -31,7 +31,7 @@ func (s *SmartContract) CreditExists(ctx contractapi.TransactionContextInterface
 	if err := s.IsIdentitySuperAdmin(ctx); err != nil {
 		return false, err
 	}
-	stateId, err := s.NewOrgCreditStateId(ctx.GetStub(), id, orgId)
+	stateId, err := s.newOrgCreditStateId(ctx.GetStub(), id, orgId)
 	if err != nil {
 		return false, err
 	}
@@ -58,7 +58,7 @@ func (s *SmartContract) CreateCredit(ctx contractapi.TransactionContextInterface
 	if err != nil {
 		return nil, err
 	}
-	stateId, err := s.NewOrgCreditStateId(ctx.GetStub(), creditId, orgId)
+	stateId, err := s.newOrgCreditStateId(ctx.GetStub(), creditId, orgId)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func (s *SmartContract) BurnCredit(ctx contractapi.TransactionContextInterface, 
 
 // mints credit and create log without checking any permission
 func (s *SmartContract) mintOrgCredit(ctx contractapi.TransactionContextInterface, creditId string, orgId string, amount string, title string, ts int64) error {
-	creditStateId, err := s.NewOrgCreditStateId(ctx.GetStub(), creditId, orgId)
+	creditStateId, err := s.newOrgCreditStateId(ctx.GetStub(), creditId, orgId)
 	if err != nil {
 		return err
 	}
@@ -154,7 +154,7 @@ func (s *SmartContract) mintOrgCredit(ctx contractapi.TransactionContextInterfac
 
 // burns credit and create log without checking any permission
 func (s *SmartContract) burnOrgCredit(stub shim.ChaincodeStubInterface, creditId string, orgId string, amount string, title string, ts int64) error {
-	creditStateId, err := s.NewOrgCreditStateId(stub, creditId, orgId)
+	creditStateId, err := s.newOrgCreditStateId(stub, creditId, orgId)
 	if err != nil {
 		return err
 	}
@@ -201,7 +201,7 @@ func (s *SmartContract) burnOrgCredit(stub shim.ChaincodeStubInterface, creditId
 
 func createCreditLog(s *SmartContract, stub shim.ChaincodeStubInterface, orgCredit OrgCredit, title string) error {
 	id := stub.GetTxID()
-	orgCreditLogStateId, err := s.NewOrgCreditLogStateId(stub, id)
+	orgCreditLogStateId, err := s.newOrgCreditLogStateId(stub, id)
 	if err != nil {
 		return err
 	}
@@ -260,7 +260,7 @@ func (s *SmartContract) ReadCredit(ctx contractapi.TransactionContextInterface, 
 	if err := s.IsIdentitySuperAdminOrAdminOfOrg(ctx, orgId); err != nil {
 		return nil, err
 	}
-	creditStateId, err := s.NewOrgCreditStateId(ctx.GetStub(), creditId, orgId)
+	creditStateId, err := s.newOrgCreditStateId(ctx.GetStub(), creditId, orgId)
 	if err != nil {
 		return nil, err
 	}

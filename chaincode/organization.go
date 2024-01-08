@@ -31,7 +31,7 @@ type Organization struct {
 }
 
 func (s *SmartContract) OrgExists(ctx contractapi.TransactionContextInterface, id string) (bool, error) {
-	orgId, err := s.NewOrgStateId(ctx.GetStub(), id)
+	orgId, err := s.newOrgStateId(ctx.GetStub(), id)
 	if err != nil {
 		return false, fmt.Errorf("Org ID error - %s", err)
 	}
@@ -54,7 +54,7 @@ func (s *SmartContract) CreateOrg(ctx contractapi.TransactionContextInterface, o
 	if orgExists {
 		return fmt.Errorf("Org %s already exists", orgId)
 	}
-	orgStateId, err := s.NewOrgStateId(ctx.GetStub(), orgId)
+	orgStateId, err := s.newOrgStateId(ctx.GetStub(), orgId)
 	if err != nil {
 		return err
 	}
@@ -102,7 +102,7 @@ func (s *SmartContract) UpdateOrg(ctx contractapi.TransactionContextInterface, o
 	if orgExists {
 		return fmt.Errorf("Org %s already exists", orgId)
 	}
-	orgStateId, err := s.NewOrgStateId(ctx.GetStub(), orgId)
+	orgStateId, err := s.newOrgStateId(ctx.GetStub(), orgId)
 	if err != nil {
 		return err
 	}
@@ -150,7 +150,7 @@ func (s *SmartContract) SetOrgPublicKey(ctx contractapi.TransactionContextInterf
 	if !pubKeyOk {
 		return fmt.Errorf("Public key invalid")
 	}
-	stateId, err := s.NewOrgStateId(ctx.GetStub(), id)
+	stateId, err := s.newOrgStateId(ctx.GetStub(), id)
 	if err != nil {
 		return err
 	}
@@ -203,7 +203,7 @@ func (s *SmartContract) ReadOrg(ctx contractapi.TransactionContextInterface, id 
 }
 
 func (s *SmartContract) readOrg(stub shim.ChaincodeStubInterface, id string) (*Organization, error) {
-	stateId, err := s.NewOrgStateId(stub, id)
+	stateId, err := s.newOrgStateId(stub, id)
 	if err != nil {
 		return nil, err
 	}
