@@ -70,6 +70,13 @@ func (s *SmartContract) IsIdentitySuperAdminOrAdminOfOrg(ctx contractapi.Transac
 	return nil
 }
 
+func (s *SmartContract) IsIdentityAdminOfOrg(ctx contractapi.TransactionContextInterface, orgId string) error {
+	if err := s.IdentityHasRoleOnOrg(ctx, orgId, "admin"); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *SmartContract) IsIdentitySuperAdminOrHasAnyRoleOnOrg(ctx contractapi.TransactionContextInterface, orgId string) error {
 	if s.IsIdentitySuperAdmin(ctx) != nil {
 		if err := s.IdentityHasOrgID(ctx, orgId); err != nil {

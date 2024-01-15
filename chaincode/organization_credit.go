@@ -21,9 +21,12 @@ type OrgCreditLog struct {
 	DocType     string `json:"docType"`
 	ID          string `json:"id"`
 	Title       string `json:"title"`
+	Type        string `json:"type"`
 	OrgID       string `json:"orgId"`
 	CreditID    string `json:"creditId"`
 	Amount      string `json:"amount"`
+	Credit      string `json:"credit"`
+	Debit       string `json:"debit"`
 	TxTimestamp int64  `json:"txTimestamp"`
 }
 
@@ -74,7 +77,7 @@ func (s *SmartContract) CreateCredit(ctx contractapi.TransactionContextInterface
 		return nil, err
 	}
 	err = ctx.GetStub().PutState(stateId, orgCreditJSON)
-	err = createCreditLog(s, ctx.GetStub(), orgCredit, "Create Credit")
+	err = createCreditLog(s, ctx.GetStub(), orgCredit, "Create Credit", "mint", "0", amount)
 	return &orgCredit, err
 }
 
@@ -87,7 +90,7 @@ func (s *SmartContract) MintCredit(ctx contractapi.TransactionContextInterface, 
 		return err
 	}
 
-	if err = s.mintOrgCredit(ctx, creditId, orgId, amount, title, ts.AsTime().Unix()); err != nil {
+	if err = s.mintOrgCredit(ctx, creditId, orgId, amount, title, ts.AsTime().Unix(), "mint"); err != nil {
 		return err
 	}
 	return nil
@@ -101,14 +104,28 @@ func (s *SmartContract) BurnCredit(ctx contractapi.TransactionContextInterface, 
 	if err != nil {
 		return err
 	}
-	if err = s.burnOrgCredit(ctx.GetStub(), creditId, orgId, amount, title, ts.AsTime().Unix()); err != nil {
+	if err = s.burnOrgCredit(ctx.GetStub(), creditId, orgId, amount, title, ts.AsTime().Unix(), "burn"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SmartContract) SpendCredit(ctx contractapi.TransactionContextInterface, creditId string, orgId string, amount string, title string) error {
+	if err := s.IsIdentityAdminOfOrg(ctx, orgId); err != nil {
+		return err
+	}
+	ts, err := ctx.GetStub().GetTxTimestamp()
+	if err != nil {
+		return err
+	}
+	if err = s.burnOrgCredit(ctx.GetStub(), creditId, orgId, amount, title, ts.AsTime().Unix(), "spend"); err != nil {
 		return err
 	}
 	return nil
 }
 
 // mints credit and create log without checking any permission
-func (s *SmartContract) mintOrgCredit(ctx contractapi.TransactionContextInterface, creditId string, orgId string, amount string, title string, ts int64) error {
+func (s *SmartContract) mintOrgCredit(ctx contractapi.TransactionContextInterface, creditId string, orgId string, amount string, title string, ts int64, logType string) error {
 	creditStateId, err := s.newOrgCreditStateId(ctx.GetStub(), creditId, orgId)
 	if err != nil {
 		return err
@@ -146,14 +163,14 @@ func (s *SmartContract) mintOrgCredit(ctx contractapi.TransactionContextInterfac
 	if err = ctx.GetStub().PutState(creditStateId, newOrgCreditJSON); err != nil {
 		return err
 	}
-	if err = createCreditLog(s, ctx.GetStub(), orgCredit, title); err != nil {
+	if err = createCreditLog(s, ctx.GetStub(), orgCredit, title, logType, "0", amount); err != nil {
 		return err
 	}
 	return nil
 }
 
 // burns credit and create log without checking any permission
-func (s *SmartContract) burnOrgCredit(stub shim.ChaincodeStubInterface, creditId string, orgId string, amount string, title string, ts int64) error {
+func (s *SmartContract) burnOrgCredit(stub shim.ChaincodeStubInterface, creditId string, orgId string, amount string, title string, ts int64, logType string) error {
 	creditStateId, err := s.newOrgCreditStateId(stub, creditId, orgId)
 	if err != nil {
 		return err
@@ -193,13 +210,13 @@ func (s *SmartContract) burnOrgCredit(stub shim.ChaincodeStubInterface, creditId
 	if err = stub.PutState(creditStateId, newOrgCreditJSON); err != nil {
 		return err
 	}
-	if err = createCreditLog(s, stub, orgCredit, title); err != nil {
+	if err = createCreditLog(s, stub, orgCredit, title, logType, amount, "0"); err != nil {
 		return err
 	}
 	return nil
 }
 
-func createCreditLog(s *SmartContract, stub shim.ChaincodeStubInterface, orgCredit OrgCredit, title string) error {
+func createCreditLog(s *SmartContract, stub shim.ChaincodeStubInterface, orgCredit OrgCredit, title string, logType string, credit string, debit string) error {
 	id := stub.GetTxID()
 	orgCreditLogStateId, err := s.newOrgCreditLogStateId(stub, id)
 	if err != nil {
@@ -221,8 +238,11 @@ func createCreditLog(s *SmartContract, stub shim.ChaincodeStubInterface, orgCred
 		ID:          id,
 		CreditID:    orgCredit.ID,
 		OrgID:       orgCredit.OrgID,
+		Type:        logType,
 		Title:       title,
 		Amount:      orgCredit.Amount,
+		Credit:      credit,
+		Debit:       debit,
 		TxTimestamp: ts.AsTime().Unix(),
 	}
 	orgCreditLogJSON, err := json.Marshal(orgCreditLog)
