@@ -30,6 +30,11 @@ type OrgCreditLog struct {
 	TxTimestamp int64  `json:"txTimestamp"`
 }
 
+type ListOrgCreditLog struct {
+	BookMark string          `json:"bookMark" validate:"required"`
+	Records  []*OrgCreditLog `json:"records" validate:"required"`
+}
+
 func (s *SmartContract) CreditExists(ctx contractapi.TransactionContextInterface, id string, orgId string) (bool, error) {
 	if err := s.IsIdentitySuperAdmin(ctx); err != nil {
 		return false, err
@@ -269,11 +274,46 @@ func (s *SmartContract) ListCreditLog(ctx contractapi.TransactionContextInterfac
 		},
 		"sort": [
 			{
-				"txTimestamp": "desc"
+				"txTimestamp": "%s"
 			}
 		]
-	}`, "OrgCreditLog", credit.ID, credit.OrgID)
-	return getQueryResultForQueryStringFromCreditLog(ctx, queryString)
+	}`, "OrgCreditLog", credit.ID, credit.OrgID, "desc")
+	parsed, _, err := getQueryResultForQueryStringFromCreditLog(ctx, queryString, 100, "")
+	if err != nil {
+		return nil, err
+	}
+	return parsed, nil
+}
+
+func (s *SmartContract) ListCreditLogPaginated(ctx contractapi.TransactionContextInterface, orgId string, creditId string, sortArg string, pageSize int32, bookMark string) (*ListOrgCreditLog, error) {
+	credit, err := s.ReadCredit(ctx, creditId, orgId)
+	if err != nil {
+		return nil, err
+	}
+	if sortArg != "asc" && sortArg != "desc" {
+		return nil, fmt.Errorf("sortArg should be either of asc org desc")
+	}
+	queryString := fmt.Sprintf(`
+	{
+		"selector": {
+			"docType":"%s", 
+			"creditId": "%s",
+			"orgId": "%s"
+		},
+		"sort": [
+			{
+				"txTimestamp": "%s"
+			}
+		]
+	}`, "OrgCreditLog", credit.ID, credit.OrgID, sortArg)
+	parsed, bookMark, err := getQueryResultForQueryStringFromCreditLog(ctx, queryString, pageSize, bookMark)
+	if err != nil {
+		return nil, err
+	}
+	return &ListOrgCreditLog{
+		BookMark: bookMark,
+		Records:  parsed,
+	}, nil
 }
 
 func (s *SmartContract) ReadCredit(ctx contractapi.TransactionContextInterface, creditId string, orgId string) (*OrgCredit, error) {
@@ -292,14 +332,18 @@ func (s *SmartContract) ReadCredit(ctx contractapi.TransactionContextInterface, 
 	return &credit, err
 }
 
-func getQueryResultForQueryStringFromCreditLog(ctx contractapi.TransactionContextInterface, queryString string) ([]*OrgCreditLog, error) {
-	resultsIterator, err := ctx.GetStub().GetQueryResult(queryString)
+func getQueryResultForQueryStringFromCreditLog(ctx contractapi.TransactionContextInterface, queryString string, pageSize int32, bookMark string) ([]*OrgCreditLog, string, error) {
+	resultsIterator, meta, err := ctx.GetStub().GetQueryResultWithPagination(queryString, pageSize, bookMark)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	defer resultsIterator.Close()
 
-	return constructQueryResponseFromIteratorFromCreditLog(resultsIterator)
+	parsed, err := constructQueryResponseFromIteratorFromCreditLog(resultsIterator)
+	if err != nil {
+		return nil, "", err
+	}
+	return parsed, meta.Bookmark, err
 }
 
 func constructQueryResponseFromIteratorFromCreditLog(resultsIterator shim.StateQueryIteratorInterface) ([]*OrgCreditLog, error) {
