@@ -20,6 +20,7 @@ type OrgCredit struct {
 type OrgCreditLog struct {
 	DocType     string `json:"docType"`
 	ID          string `json:"id"`
+	TxID        string `json:"txID"`
 	Title       string `json:"title"`
 	Type        string `json:"type"`
 	OrgID       string `json:"orgId"`
@@ -240,6 +241,7 @@ func createCreditLog(s *SmartContract, stub shim.ChaincodeStubInterface, orgCred
 	}
 	orgCreditLog := OrgCreditLog{
 		DocType:     "OrgCreditLog",
+		TxID:        stub.GetTxID(),
 		ID:          id,
 		CreditID:    orgCredit.ID,
 		OrgID:       orgCredit.OrgID,
