@@ -99,8 +99,8 @@ func (s *SmartContract) UpdateOrg(ctx contractapi.TransactionContextInterface, o
 	if err != nil {
 		return err
 	}
-	if orgExists {
-		return fmt.Errorf("Org %s already exists", orgId)
+	if !orgExists {
+		return fmt.Errorf("Org %s does not exist", orgId)
 	}
 	orgStateId, err := s.newOrgStateId(ctx.GetStub(), orgId)
 	if err != nil {
@@ -143,8 +143,8 @@ func (s *SmartContract) UpdateMyOrg(ctx contractapi.TransactionContextInterface,
 	if err != nil {
 		return err
 	}
-	if orgExists {
-		return fmt.Errorf("Org %s already exists", orgId)
+	if !orgExists {
+		return fmt.Errorf("Org %s does not exist", orgId)
 	}
 	orgStateId, err := s.newOrgStateId(ctx.GetStub(), orgId)
 	if err != nil {
