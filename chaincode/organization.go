@@ -134,6 +134,43 @@ func (s *SmartContract) UpdateOrg(ctx contractapi.TransactionContextInterface, o
 	return nil
 }
 
+func (s *SmartContract) UpdateMyOrg(ctx contractapi.TransactionContextInterface, orgId string, email string, logo string) error {
+	err := s.IsIdentityAdminOfOrg(ctx, orgId)
+	if err != nil {
+		return err
+	}
+	orgExists, err := s.OrgExists(ctx, orgId)
+	if err != nil {
+		return err
+	}
+	if orgExists {
+		return fmt.Errorf("Org %s already exists", orgId)
+	}
+	orgStateId, err := s.newOrgStateId(ctx.GetStub(), orgId)
+	if err != nil {
+		return err
+	}
+	ts, err := ctx.GetStub().GetTxTimestamp()
+	if err != nil {
+		return err
+	}
+	org, err := s.ReadOrg(ctx, orgId)
+	if err != nil {
+		return err
+	}
+	org.Email = email
+	org.LogoUrl = logo
+	org.UpdateTxTimestamp = ts.AsTime().UTC().Unix()
+	orgJSON, err := json.Marshal(org)
+	if err != nil {
+		return err
+	}
+	if err = ctx.GetStub().PutState(orgStateId, orgJSON); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *SmartContract) SetOrgPublicKey(ctx contractapi.TransactionContextInterface, id string, pubKeyType string, pubKeyPemArg string) error {
 	if err := s.IsIdentitySuperAdmin(ctx); err != nil {
 		return err
