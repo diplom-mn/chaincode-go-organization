@@ -201,9 +201,9 @@ func (s *SmartContract) SetOrgPublicKey(ctx contractapi.TransactionContextInterf
 		return err
 	}
 
-	if len(org.PubKeyPem) > 0 {
-		return fmt.Errorf("Org already has a public key")
-	}
+	// if len(org.PubKeyPem) > 0 {
+	// 	return fmt.Errorf("Org already has a public key")
+	// }
 
 	pubKeyQueryString := strings.ReplaceAll(pubKeyPemArg, "\n", "\\n")
 	queryString := fmt.Sprintf(`
