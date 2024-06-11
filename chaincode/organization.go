@@ -134,7 +134,7 @@ func (s *SmartContract) UpdateOrg(ctx contractapi.TransactionContextInterface, o
 	return nil
 }
 
-func (s *SmartContract) UpdateMyOrg(ctx contractapi.TransactionContextInterface, orgId string, email string, logo string) error {
+func (s *SmartContract) UpdateMyOrg(ctx contractapi.TransactionContextInterface, orgId string, name string, email string, logo string) error {
 	err := s.IsIdentityAdminOfOrg(ctx, orgId)
 	if err != nil {
 		return err
@@ -158,8 +158,15 @@ func (s *SmartContract) UpdateMyOrg(ctx contractapi.TransactionContextInterface,
 	if err != nil {
 		return err
 	}
-	org.Email = email
-	org.LogoUrl = logo
+	if email != "" {
+		org.Email = email
+	}
+	if logo != "" {
+		org.LogoUrl = logo
+	}
+	if name != "" {
+		org.Name = name
+	}
 	org.UpdateTxTimestamp = ts.AsTime().UTC().Unix()
 	orgJSON, err := json.Marshal(org)
 	if err != nil {
