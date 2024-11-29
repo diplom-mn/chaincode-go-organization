@@ -242,6 +242,41 @@ func (s *SmartContract) SetOrgPublicKey(ctx contractapi.TransactionContextInterf
 	return nil
 }
 
+func (s *SmartContract) RemoveOrgPublicKey(ctx contractapi.TransactionContextInterface, id string) error {
+	if err := s.IsIdentitySuperAdmin(ctx); err != nil {
+		return err
+	}
+	stateId, err := s.newOrgStateId(ctx.GetStub(), id)
+	if err != nil {
+		return err
+	}
+	orgJSON, err := ctx.GetStub().GetState(stateId)
+	if err != nil {
+		return err
+	}
+	var org Organization
+	err = json.Unmarshal(orgJSON, &org)
+	if err != nil {
+		return err
+	}
+	ts, err := ctx.GetStub().GetTxTimestamp()
+	if err != nil {
+		return err
+	}
+	org.PubKeyType = ""
+	org.PubKeyPem = ""
+	org.UpdateTxTimestamp = ts.AsTime().UTC().Unix()
+	updatedJSON, err := json.Marshal(org)
+	if err != nil {
+		return err
+	}
+	if err := ctx.GetStub().PutState(stateId, updatedJSON); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *SmartContract) ReadOrg(ctx contractapi.TransactionContextInterface, id string) (*Organization, error) {
 	return s.readOrg(ctx.GetStub(), id)
 }
