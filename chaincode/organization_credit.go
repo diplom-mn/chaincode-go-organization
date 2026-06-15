@@ -198,7 +198,8 @@ func (s *SmartContract) burnOrgCredit(stub shim.ChaincodeStubInterface, creditId
 
 	subtractAmount, err := decimal.NewFromString(amount)
 	if subtractAmount.LessThanOrEqual(decimal.Zero) {
-		return fmt.Errorf("Credit is lower than or equals to 0")
+		// return fmt.Errorf("Credit is lower than or equals to 0")
+		return nil
 	}
 	if subtractAmount.GreaterThan(oldCreditAmount) {
 		return fmt.Errorf("Amount exceeds remaining credit")
@@ -270,7 +271,7 @@ func (s *SmartContract) ListCreditLog(ctx contractapi.TransactionContextInterfac
 	queryString := fmt.Sprintf(`
 	{
 		"selector": {
-			"docType":"%s", 
+			"docType":"%s",
 			"creditId": "%s",
 			"orgId": "%s"
 		},
@@ -298,7 +299,7 @@ func (s *SmartContract) ListCreditLogPaginated(ctx contractapi.TransactionContex
 	queryString := fmt.Sprintf(`
 	{
 		"selector": {
-			"docType":"%s", 
+			"docType":"%s",
 			"creditId": "%s",
 			"orgId": "%s"
 		},
